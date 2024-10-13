@@ -5,12 +5,12 @@ namespace UmDoisTresVendas.Domain.Entities;
 
 public class Sale
 {
-    public Guid Id { get; }
-    public string SaleIdentification { get; }
-    public DateTime CreatedAt { get; }
+    public Guid Id { get; private set; }
+    public string SaleIdentification { get; private set; }
+    public DateTime CreatedAt { get; private set; }
     public List<SaleItem> Items { get; private set; }
-    public string CustomerId { get; }
-    public string BranchId { get; }
+    public string CustomerId { get; private set; }
+    public string BranchId { get; private set; }
     public SaleStatusEnum Status { get; private set; }
 
     public Sale(string saleIdentification, DateTime createdAt, string customerId, string branchId, SaleStatusEnum status)
