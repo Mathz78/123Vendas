@@ -11,7 +11,11 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.2.24474.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="Shouldly" Version="4.2.1" />
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
@@ -22,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\UmDoisTresVendas.Application\UmDoisTresVendas.Application.csproj" />
+      <ProjectReference Include="..\UmDoisTresVendas.Infrastructure\UmDoisTresVendas.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

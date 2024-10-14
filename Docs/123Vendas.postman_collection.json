@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "1ec96744-5451-472e-a730-9ca8af1954c0",
+		"name": "123Vendas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16743903"
+	},
+	"item": [
+		{
+			"name": "Create Sale",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerId\": \"1\",\n  \"customerName\": \"Matheus Rocha with 💙\",\n  \"branchId\": \"1\",\n  \"branchName\": \"Ambev\",\n  \"items\": [\n    {\n      \"productId\": \"77\",\n      \"productName\": \"Guaraná Antarctica\",\n      \"quantity\": 2,\n      \"unitPrice\": 4,\n      \"discount\": 0\n    },\n    {\n      \"productId\": \"33\",\n      \"productName\": \"Fusion\",\n      \"quantity\": 3,\n      \"unitPrice\": 7,\n      \"discount\": 1\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5271/api/Sales/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5271",
+					"path": [
+						"api",
+						"Sales",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get sale details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5271/api/Sales/8c7a2b72-56e8-4a24-aac6-bb04b7f1e11f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5271",
+					"path": [
+						"api",
+						"Sales",
+						"8c7a2b72-56e8-4a24-aac6-bb04b7f1e11f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a sale",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"items\": [\n    {\n      \"productId\": \"77\",\n      \"productName\": \"Guaraná Antarctica\",\n      \"quantity\": 10,\n      \"unitPrice\": 4,\n      \"discount\": 0\n    }\n  ],\n  \"saleStatus\": 3\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5271/api/Sales/{{saleId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5271",
+					"path": [
+						"api",
+						"Sales",
+						"{{saleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel a sale",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5271/api/Sales/{{saleId}}/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5271",
+					"path": [
+						"api",
+						"Sales",
+						"{{saleId}}",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "saleId",
+			"value": "dfe23451-f76c-41d9-9430-4edaecf89deb"
+		}
+	]
+}
