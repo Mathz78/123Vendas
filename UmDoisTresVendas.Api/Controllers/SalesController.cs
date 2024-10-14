@@ -21,7 +21,7 @@ public class SalesController : ControllerBase
     [HttpGet("{saleId}")]
     public async Task<IActionResult> GetSale(Guid saleId)
     {
-        var result = await _saleService.GetSaleByIdentificationAsync(saleId);
+        var result = await _saleService.GetSaleByIdAsync(saleId);
         
         if (!result.Success)
         {

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using UmDoisTresVendas.Application.DTOs;
 using UmDoisTresVendas.Application.Interfaces;
@@ -26,11 +27,13 @@ public class SaleService : ISaleService
         _mapper = mapper;
     }
 
-    public async Task<ApiResponseDto<GetSaleDto>> GetSaleByIdentificationAsync(Guid saleId)
+    public async Task<ApiResponseDto<GetSaleDto>> GetSaleByIdAsync(Guid saleId)
     {
         try
         {
-            var sale = await _saleRepository.GetByIdAsync(saleId);
+            var sale = await _saleRepository.Query()
+                .Include(s => s.Items)
+                .FirstOrDefaultAsync(s => s.Id == saleId);
             if (sale == null)
             {
                 _logger.Information("No sale was found for the given Id: {saleId}", saleId);

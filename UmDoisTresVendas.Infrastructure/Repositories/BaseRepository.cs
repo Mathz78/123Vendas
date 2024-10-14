@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using UmDoisTresVendas.Application.Interfaces;
+using UmDoisTresVendas.Domain.Entities;
 using UmDoisTresVendas.Infrastructure.Data;
 
 namespace UmDoisTresVendas.Infrastructure.Repositories;
@@ -40,6 +41,11 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return entity;
     }
 
+    public IQueryable<Sale> Query()
+    {
+        return _context.Sales.AsQueryable();
+    }
+    
     public async Task DeleteAsync(Guid id)
     {
         var entity = await GetByIdAsync(id);
