@@ -33,6 +33,7 @@ public class SaleService : ISaleService
             var sale = await _saleRepository.GetByIdAsync(saleId);
             if (sale == null)
             {
+                _logger.Information("No sale was found for the given Id: {saleId}", saleId);
                 return new ApiResponseDto<GetSaleDto>(false, 
                     new List<string> { "No sale was found for the given Id." });
             }
@@ -58,6 +59,7 @@ public class SaleService : ISaleService
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                _logger.Information("Errors are being returned with the validation result.");
                 return new ApiResponseDto<CreateSaleResponseDto>(false, errorMessages);
             }
         
