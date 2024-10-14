@@ -13,15 +13,17 @@ public class Sale
     public string BranchId { get; private set; }
     public SaleStatusEnum Status { get; private set; }
 
-    public Sale(string saleIdentification, DateTime createdAt, string customerId, string branchId, SaleStatusEnum status)
+    public Sale() { }
+    
+    public Sale(string customerId, string branchId, List<SaleItem> items)
     {
         Id = Guid.NewGuid();
-        SaleIdentification = saleIdentification;
-        CreatedAt = createdAt;
-        Items = new List<SaleItem>();
+        SaleIdentification = GenerateSaleIdentification(customerId, branchId, DateTime.Now);
+        CreatedAt = DateTime.Now;
+        Items = items;
         CustomerId = customerId;
         BranchId = branchId;
-        Status = status;
+        Status = SaleStatusEnum.Created;
     }
 
     public void AddItem(SaleItem item)
@@ -35,5 +37,10 @@ public class Sale
     public decimal CalculateTotal()
     {
         return Items.Sum(item => item.TotalPrice());
+    }
+    
+    private string GenerateSaleIdentification(string customerId, string branchId, DateTime date)
+    {
+        return $"{customerId}-{branchId}-{Guid.NewGuid().ToString("N")[..6]}-{date:ddMMyyyy}";
     }
 }
