@@ -44,6 +44,18 @@ public class SalesController : ControllerBase
         return Ok(result);
     }
     
+    [HttpPut("{saleId}")]
+    public async Task<IActionResult> UpdateSale(Guid saleId, UpdateSaleDto updateSaleDto)
+    {
+        var result = await _saleService.UpdateSaleAsync(saleId, updateSaleDto);
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+    
     [HttpPost("{saleId}/cancel")]
     public async Task<IActionResult> CancelSale(Guid saleId)
     {

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using UmDoisTresVendas.Domain.Entities.Enums;
 
 namespace UmDoisTresVendas.Domain.Entities;
@@ -8,7 +9,7 @@ public class Sale
     public string SaleIdentification { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-    public List<SaleItem> Items { get; private set; }
+    public List<SaleItem> Items { get; private set; } = new List<SaleItem>();
     public string CustomerId { get; private set; }
     public string CustomerName { get; private set; }
     public string BranchId { get; private set; }
@@ -24,7 +25,6 @@ public class Sale
         SaleIdentification = GenerateSaleIdentification(customerId, branchId, DateTime.Now);
         CreatedAt = DateTime.Now;
         UpdatedAt = null;
-        Items = new List<SaleItem>();
         CustomerId = customerId;
         CustomerName = customerName;
         BranchId = branchId;
@@ -68,6 +68,18 @@ public class Sale
     public decimal CalculateTotal()
     {
         return TotalPrice;
+    }
+    
+    public void UpdateFromDto(SaleStatusEnum status, List<SaleItem> items)
+    {
+        UpdateStatus(status);
+        UpdatedAt = DateTime.Now;
+        
+        foreach (var item in items)
+        {
+            var newItem = new SaleItem(item.ProductId, item.ProductName, item.Quantity, item.UnitPrice, item.Discount);
+            AddItem(newItem); 
+        }
     }
     
     private string GenerateSaleIdentification(string customerId, string branchId, DateTime date)

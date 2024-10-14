@@ -4,7 +4,12 @@ namespace UmDoisTresVendas.Application.DTOs;
 
 public class UpdateSaleDto
 {
-    public string SaleIdentification { get; set; }
     public List<SaleItemDto> Items { get; set; }
     public SaleStatusEnum SaleStatus { get; set; }
+
+    public UpdateSaleDto(List<SaleItemDto> items, SaleStatusEnum saleStatus)
+    {
+        Items = items;
+        SaleStatus = saleStatus;
+    }
 }

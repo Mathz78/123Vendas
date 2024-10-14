@@ -11,5 +11,8 @@ public class MappingProfile : Profile
     {
         CreateMap<Sale, GetSaleDto>();
         CreateMap<SaleItem, GetSaleItemDto>();
+        CreateMap<SaleItemDto, SaleItem>()
+            .ConstructUsing(src => new SaleItem(src.ProductId, 
+                src.ProductName, src.Quantity, src.UnitPrice, src.Discount));
     }
 }

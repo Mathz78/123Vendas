@@ -86,6 +86,33 @@ public class SaleService : ISaleService
         }
     }
 
+    public async Task<ApiResponseDto<UpdateSaleDto>> UpdateSaleAsync(Guid saleId, UpdateSaleDto updateSaleDto)
+    {
+        try
+        {
+            var sale = await _saleRepository.GetByIdAsync(saleId);
+            if (sale == null)
+            {
+                _logger.Information("No sale was found for the given Id: {saleId}", saleId);
+                return new ApiResponseDto<UpdateSaleDto>(false, 
+                    new List<string> { "No sale was found for the given Id." });
+            }
+            
+            sale.UpdateFromDto(updateSaleDto.SaleStatus, 
+                _mapper.Map<List<SaleItem>>(updateSaleDto.Items));
+            await _saleRepository.UpdateAsync(sale);
+            
+            _logger.Information("Sucessfully updated sale {saleId}", saleId);
+            return new ApiResponseDto<UpdateSaleDto>(new UpdateSaleDto(updateSaleDto.Items, sale.Status));
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error occurred while trying to update a sale.");
+            return new ApiResponseDto<UpdateSaleDto>(false,
+                ["Error occurred while trying to update a sale."]);
+        }
+    }
+    
     public async Task<ApiResponseDto<CancelSaleDto>> CancelSaleAsync(Guid saleId)
     {
         try
