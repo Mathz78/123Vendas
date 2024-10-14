@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using UmDoisTresVendas.Application.Interfaces;
+using UmDoisTresVendas.Application.Mappings;
 using UmDoisTresVendas.Application.Services;
 using UmDoisTresVendas.Application.Validations;
 using UmDoisTresVendas.Infrastructure.Data;
@@ -30,6 +31,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<SaleDtoValidator>();
+
+// Adding AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

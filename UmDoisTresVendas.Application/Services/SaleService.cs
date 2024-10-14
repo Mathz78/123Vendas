@@ -1,10 +1,10 @@
+using AutoMapper;
 using Serilog;
 using UmDoisTresVendas.Application.DTOs;
 using UmDoisTresVendas.Application.Interfaces;
 using UmDoisTresVendas.Application.Validations;
 using UmDoisTresVendas.Domain.Entities;
 using UmDoisTresVendas.Domain.Entities.Enums;
-using UmDoisTresVendas.Domain.Responses;
 
 namespace UmDoisTresVendas.Application.Services;
 
@@ -13,15 +13,44 @@ public class SaleService : ISaleService
     private readonly IBaseRepository<Sale> _saleRepository;
     private readonly SaleDtoValidator _saleDtoValidator;
     private readonly ILogger _logger;
+    private readonly IMapper _mapper;
     
-    public SaleService(IBaseRepository<Sale> saleRepository, SaleDtoValidator saleDtoValidator, ILogger logger)
+    public SaleService(IBaseRepository<Sale> saleRepository, 
+        SaleDtoValidator saleDtoValidator, 
+        ILogger logger, 
+        IMapper mapper)
     {
         _saleRepository = saleRepository;
         _saleDtoValidator = saleDtoValidator;
         _logger = logger;
+        _mapper = mapper;
     }
 
-    public async Task<ApiResponse<CreateSaleResponse>> CreateSaleAsync(CreateSaleDto createSaleDto)
+    public async Task<ApiResponseDto<GetSaleDto>> GetSaleByIdentificationAsync(Guid saleId)
+    {
+        try
+        {
+            var sale = await _saleRepository.GetByIdAsync(saleId);
+            if (sale == null)
+            {
+                return new ApiResponseDto<GetSaleDto>(false, 
+                    new List<string> { "No sale was found for the given Id." });
+            }
+            
+            var saleDto = _mapper.Map<GetSaleDto>(sale);
+            _logger.Information("The data for the sale: {saleId} was successfully retrieved.", saleId);
+            
+            return new ApiResponseDto<GetSaleDto>(saleDto);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error occurred while trying to retrieve data for a sale.");
+            return new ApiResponseDto<GetSaleDto>(false,
+                ["Error occurred while trying to insert a new sale."]); 
+        }
+    }
+    
+    public async Task<ApiResponseDto<CreateSaleResponseDto>> CreateSaleAsync(CreateSaleDto createSaleDto)
     {
         try
         {
@@ -29,7 +58,7 @@ public class SaleService : ISaleService
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return new ApiResponse<CreateSaleResponse>(false, errorMessages);
+                return new ApiResponseDto<CreateSaleResponseDto>(false, errorMessages);
             }
         
             var items = new List<SaleItem>();
@@ -44,18 +73,14 @@ public class SaleService : ISaleService
         
             _logger.Information("Sucessfully added new sale {saleIdentification}", sale.SaleIdentification);
             
-            return new ApiResponse<CreateSaleResponse>(new CreateSaleResponse(sale.SaleIdentification));
+            return new ApiResponseDto<CreateSaleResponseDto>(new CreateSaleResponseDto(sale.Id.ToString(), 
+                sale.SaleIdentification));
         }
         catch (Exception ex)
         {
             _logger.Error(ex, "Error occurred while trying to insert a new sale.");
-            return new ApiResponse<CreateSaleResponse>(false,
+            return new ApiResponseDto<CreateSaleResponseDto>(false,
                 ["Error occurred while trying to insert a new sale."]); 
         }
-    }
-
-    public Task<Sale> GetSaleByIdAsync(string saleId)
-    {
-        throw new NotImplementedException();
     }
 }

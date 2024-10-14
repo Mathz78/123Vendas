@@ -1,19 +1,19 @@
-namespace UmDoisTresVendas.Domain.Responses;
+namespace UmDoisTresVendas.Application.DTOs;
 
-public class ApiResponse<T>
+public class ApiResponseDto<T>
 {
     public bool Success { get; set; }
     public List<string>? Errors { get; set; }
     public T? Content { get; set; }
 
-    public ApiResponse(bool success, List<string> errors)
+    public ApiResponseDto(bool success, List<string> errors)
     {
         Success = false;
         Errors = errors;
         Content = default;
     }
     
-    public ApiResponse(T content)
+    public ApiResponseDto(T content)
     {
         Success = true;
         Errors = null;

@@ -9,6 +9,8 @@ public class SaleItem
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
 
+    public Guid SaleId { get; set; }
+    
     public SaleItem(string productId, string productName, int quantity, decimal unitPrice, decimal discount)
     {
         Id = Guid.NewGuid();

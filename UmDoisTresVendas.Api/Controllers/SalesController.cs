@@ -1,7 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using UmDoisTresVendas.Application.DTOs;
 using UmDoisTresVendas.Application.Interfaces;
-using UmDoisTresVendas.Domain.Responses;
 
 namespace UmDoisTresVendas.Api.Controllers;
 
@@ -18,15 +18,20 @@ public class SalesController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{saleIdentification}")]
-    public IActionResult GetSale(string saleIdentification)
+    [HttpGet("{saleId}")]
+    public async Task<IActionResult> GetSale(Guid saleId)
     {
-        // _saleService.GetSaleByIdAsync("");
+        var result = await _saleService.GetSaleByIdentificationAsync(saleId);
         
-        return Ok("Hello World!");
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+        
+        return Ok(result);
     }
 
-    [HttpPost("CreateSale")]
+    [HttpPost]
     public async Task<IActionResult> CreateSale(CreateSaleDto createSaleDto)
     {
         var result = await _saleService.CreateSaleAsync(createSaleDto);
