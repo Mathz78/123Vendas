@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -75,9 +76,10 @@ public class SaleService : ISaleService
             var sale = new Sale(createSaleDto.CustomerId, createSaleDto.CustomerName, createSaleDto.BranchId, 
                 createSaleDto.BranchName, items);
             await _saleRepository.AddAsync(sale);
-        
-            _logger.Information("Sucessfully added new sale {saleIdentification}", sale.SaleIdentification);
             
+            PublishSaleEvent(nameof(CreateSaleAsync), sale.Id, new { SaleTotal = sale.TotalPrice });
+            
+            _logger.Information("Sucessfully added new sale {saleIdentification}", sale.SaleIdentification);
             return new ApiResponseDto<CreateSaleResponseDto>(new CreateSaleResponseDto(sale.Id.ToString(), 
                 sale.SaleIdentification));
         }
@@ -104,6 +106,8 @@ public class SaleService : ISaleService
             sale.UpdateFromDto(updateSaleDto.SaleStatus, 
                 _mapper.Map<List<SaleItem>>(updateSaleDto.Items));
             await _saleRepository.UpdateAsync(sale);
+            
+            PublishSaleEvent(nameof(UpdateSaleAsync), sale.Id, updateSaleDto);
             
             _logger.Information("Sucessfully updated sale {saleId}", saleId);
             return new ApiResponseDto<UpdateSaleDto>(new UpdateSaleDto(updateSaleDto.Items, sale.Status));
@@ -138,6 +142,8 @@ public class SaleService : ISaleService
             sale.UpdateStatus(SaleStatusEnum.Cancelled);
             await _saleRepository.UpdateAsync(sale);
             
+            PublishSaleEvent(nameof(CancelSaleAsync), sale.Id);
+            
             _logger.Information("Sucessfully canceled sale {saleId}", saleId);
             return new ApiResponseDto<CancelSaleDto>(new CancelSaleDto(sale.SaleIdentification));
         }
@@ -147,5 +153,17 @@ public class SaleService : ISaleService
             return new ApiResponseDto<CancelSaleDto>(false,
                 ["Error while trying to cancel a sale."]);
         }
+    }
+    
+    private void PublishSaleEvent(string eventType, Guid saleId, object additionalData = null)
+    {
+        var message = $"Event: {eventType} | SaleId: {saleId} | Date: {DateTime.Now}";
+
+        if (additionalData != null)
+        {
+            message += $" | Additional Data: {JsonSerializer.Serialize(additionalData)}";
+        }
+
+        _logger.Information(message);
     }
 }
