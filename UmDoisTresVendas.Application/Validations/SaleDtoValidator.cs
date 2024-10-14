@@ -24,6 +24,7 @@ public class SaleDtoValidator : AbstractValidator<CreateSaleDto>
             .WithMessage($"The field {nameof(CreateSaleDto.BranchName)} cannot be null or empty.");
         
         RuleFor(x => x.Items)
+            .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("Items list cannot be null.")
             .Must(items => items.Count > 0).WithMessage("Items list must contain at least one item.")
             .ForEach(item => item.SetValidator(new SaleItemDtoValidator()));
