@@ -18,10 +18,8 @@ namespace UmDoisTresVendas.Tests.Application.Validations
         [MemberData(nameof(InvalidSaleDtoData))]
         public void Should_Have_Error_When_SaleDto_Is_Invalid(CreateSaleDto saleDto, string expectedField, string expectedMessage)
         {
-            // Act
             var result = _validator.TestValidate(saleDto);
-
-            // Assert
+            
             result.ShouldHaveValidationErrorFor(expectedField)
                 .WithErrorMessage(expectedMessage);
         }
@@ -29,7 +27,6 @@ namespace UmDoisTresVendas.Tests.Application.Validations
         [Fact]
         public void Should_Not_Have_Error_When_Validation_Is_Successful()
         {
-            // Arrange
             var saleDto = new CreateSaleDto
             {
                 CustomerId = "customer-1",
@@ -47,11 +44,9 @@ namespace UmDoisTresVendas.Tests.Application.Validations
                     }
                 }
             };
-
-            // Act
+            
             var result = _validator.TestValidate(saleDto);
-
-            // Assert
+            
             result.IsValid.ShouldBe(true);
         }
         
@@ -135,7 +130,7 @@ namespace UmDoisTresVendas.Tests.Application.Validations
                     CustomerName = "John Doe",
                     BranchId = "branch-1",
                     BranchName = "Main Branch",
-                    Items = new List<SaleItemDto>() // Empty list
+                    Items = new List<SaleItemDto>()
                 },
                 nameof(CreateSaleDto.Items),
                 "Items list must contain at least one item."
