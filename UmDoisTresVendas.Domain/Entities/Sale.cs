@@ -9,7 +9,7 @@ public class Sale
     public string SaleIdentification { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-    public List<SaleItem> Items { get; private set; } = new List<SaleItem>();
+    public List<SaleItem> Items { get; private set; }
     public string CustomerId { get; private set; }
     public string CustomerName { get; private set; }
     public string BranchId { get; private set; }
@@ -25,6 +25,7 @@ public class Sale
         SaleIdentification = GenerateSaleIdentification(customerId, branchId, DateTime.Now);
         CreatedAt = DateTime.Now;
         UpdatedAt = null;
+        Items = new List<SaleItem>();
         CustomerId = customerId;
         CustomerName = customerName;
         BranchId = branchId;
@@ -75,10 +76,15 @@ public class Sale
         UpdateStatus(status);
         UpdatedAt = DateTime.Now;
         
+        Items.Clear();
+        
         foreach (var item in items)
         {
-            var newItem = new SaleItem(item.ProductId, item.ProductName, item.Quantity, item.UnitPrice, item.Discount);
-            AddItem(newItem); 
+            var newItem = new SaleItem(item.ProductId, item.ProductName, item.Quantity, item.UnitPrice, item.Discount)
+            {
+                SaleId = Id
+            };
+            AddItem(newItem);
         }
     }
     
