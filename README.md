@@ -68,7 +68,7 @@ Ensure you have the following installed:
    dotnet run
    ```
 
-   The application will start running on http://localhost:5000 or another specified port.
+   The application will start running on http://localhost:5271 or specify the disered port in the launchSettings.json.
 
 ### Usage
 
