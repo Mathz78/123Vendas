@@ -10,4 +10,13 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<Sale> Sales { get; set; }
     public DbSet<SaleItem> SaleItems { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Sale>()
+            .HasMany(s => s.Items)
+            .WithOne()
+            .HasForeignKey("SaleId")
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

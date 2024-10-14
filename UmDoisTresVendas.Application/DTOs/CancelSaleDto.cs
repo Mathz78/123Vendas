@@ -2,5 +2,10 @@ namespace UmDoisTresVendas.Application.DTOs;
 
 public class CancelSaleDto
 {
-    public required string SaleIdentification { get; set; }
+    public string? SaleIdentification { get; set; }
+
+    public CancelSaleDto(string saleIdentification)
+    {
+        SaleIdentification = saleIdentification;
+    }
 }
