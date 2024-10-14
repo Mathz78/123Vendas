@@ -85,4 +85,37 @@ public class SaleService : ISaleService
                 ["Error occurred while trying to insert a new sale."]); 
         }
     }
+
+    public async Task<ApiResponseDto<CancelSaleDto>> CancelSaleAsync(Guid saleId)
+    {
+        try
+        {
+            var sale = await _saleRepository.GetByIdAsync(saleId);
+            if (sale == null)
+            {
+                _logger.Information("No sale was found for the given Id: {saleId}", saleId);
+                return new ApiResponseDto<CancelSaleDto>(false,
+                    ["No sale was found for the given Id."]);
+            }
+
+            if (sale.Status == SaleStatusEnum.Cancelled)
+            {
+                _logger.Information("Sale Id: {saleId} is already canceled.", saleId);
+                return new ApiResponseDto<CancelSaleDto>(false,
+                    ["Sale is already canceled."]);
+            }
+            
+            sale.UpdateStatus(SaleStatusEnum.Cancelled);
+            await _saleRepository.UpdateAsync(sale);
+            
+            _logger.Information("Sucessfully canceled sale {saleId}", saleId);
+            return new ApiResponseDto<CancelSaleDto>(new CancelSaleDto(sale.SaleIdentification));
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error occurred while trying to cancel a sale.");
+            return new ApiResponseDto<CancelSaleDto>(false,
+                ["Error while trying to cancel a sale."]);
+        }
+    }
 }

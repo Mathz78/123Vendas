@@ -54,6 +54,11 @@ public class Sale
         Items.Remove(item);
         UpdateTotalPrice();
     }
+
+    public void UpdateStatus(SaleStatusEnum status)
+    {
+        Status = status;
+    }
     
     private void UpdateTotalPrice()
     {
