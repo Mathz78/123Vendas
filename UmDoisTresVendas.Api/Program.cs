@@ -30,6 +30,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register services
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<SaleDtoValidator>();
 
 // Adding AutoMapper

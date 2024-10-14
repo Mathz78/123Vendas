@@ -11,12 +11,12 @@ namespace UmDoisTresVendas.Application.Services;
 
 public class SaleService : ISaleService
 {
-    private readonly IBaseRepository<Sale> _saleRepository;
+    private readonly ISaleRepository _saleRepository;
     private readonly SaleDtoValidator _saleDtoValidator;
     private readonly ILogger _logger;
     private readonly IMapper _mapper;
     
-    public SaleService(IBaseRepository<Sale> saleRepository, 
+    public SaleService(ISaleRepository saleRepository, 
         SaleDtoValidator saleDtoValidator, 
         ILogger logger, 
         IMapper mapper)

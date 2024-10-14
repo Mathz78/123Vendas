@@ -40,11 +40,6 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         await _context.SaveChangesAsync();
         return entity;
     }
-
-    public IQueryable<Sale> Query()
-    {
-        return _context.Sales.AsQueryable();
-    }
     
     public async Task DeleteAsync(Guid id)
     {
