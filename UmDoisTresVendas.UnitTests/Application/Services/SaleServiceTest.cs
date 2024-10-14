@@ -52,4 +52,68 @@ public class SaleServiceTests : BaseTest
         result.Content.ShouldNotBeNull();
         result.Content.SaleId.ShouldNotBeNullOrEmpty();
     }
+    
+    [Fact]
+    public async Task CancelSaleAsync_Should_Cancel_Sale_Successfully()
+    {
+        // Arrange
+        var saleId = Guid.NewGuid();
+        var sale = new Sale("customer-1", "Customer One", "branch-1", "Branch One",
+            new List<SaleItem> { new SaleItem("product-1", "Product One", 2, 50, 0) });
+
+        _mockSaleRepository.Setup(repo => repo.GetByIdAsync(saleId))
+            .ReturnsAsync(sale);
+
+        _mockSaleRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Sale>()))
+            .ReturnsAsync(sale);
+
+        // Act
+        var result = await _saleService.CancelSaleAsync(saleId);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Success.ShouldBeTrue();
+        result.Content.ShouldNotBeNull();
+        result.Content.SaleIdentification.ShouldBe(sale.SaleIdentification);
+        sale.Status.ShouldBe(SaleStatusEnum.Cancelled);
+    }
+
+    [Fact]
+    public async Task CancelSaleAsync_Should_Return_Error_If_Sale_Not_Found()
+    {
+        // Arrange
+        var saleId = Guid.NewGuid();
+
+        _mockSaleRepository.Setup(repo => repo.GetByIdAsync(saleId))
+            .ReturnsAsync((Sale)null);
+
+        // Act
+        var result = await _saleService.CancelSaleAsync(saleId);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Success.ShouldBeFalse();
+        result.Errors.ShouldContain("No sale was found for the given Id.");
+    }
+
+    [Fact]
+    public async Task CancelSaleAsync_Should_Return_Error_If_Sale_Already_Cancelled()
+    {
+        // Arrange
+        var saleId = Guid.NewGuid();
+        var sale = new Sale("customer-1", "Customer One", "branch-1", "Branch One",
+            new List<SaleItem> { new SaleItem("product-1", "Product One", 2, 50, 0) });
+        sale.UpdateStatus(status: SaleStatusEnum.Cancelled);
+        
+        _mockSaleRepository.Setup(repo => repo.GetByIdAsync(saleId))
+            .ReturnsAsync(sale);
+
+        // Act
+        var result = await _saleService.CancelSaleAsync(saleId);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Success.ShouldBeFalse();
+        result.Errors.ShouldContain("Sale is already canceled.");
+    }
 }
