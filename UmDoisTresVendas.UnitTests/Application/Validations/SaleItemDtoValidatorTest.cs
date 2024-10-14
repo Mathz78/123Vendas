@@ -5,11 +5,11 @@ using UmDoisTresVendas.Application.Validations;
 
 namespace UmDoisTresVendas.UnitTests.Application.Validations
 {
-    public class SaleItemDtoValidatorTests
+    public class SaleItemDtoValidatorTest
     {
         private readonly SaleItemDtoValidator _validator;
 
-        public SaleItemDtoValidatorTests()
+        public SaleItemDtoValidatorTest()
         {
             _validator = new SaleItemDtoValidator();
         }
