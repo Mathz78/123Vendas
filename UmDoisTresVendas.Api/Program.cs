@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using UmDoisTresVendas.Infrastructure.Configuration;
 using UmDoisTresVendas.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
