@@ -37,16 +37,13 @@ public class SaleServiceTests : BaseTest
     [Fact]
     public async Task CreateSaleAsync_Should_Add_Sale_Successfully()
     {
-        // Arrenge
         _mockSaleRepository
             .Setup(repo => repo.AddAsync(It.IsAny<Sale>()))
             .ReturnsAsync(new Sale(ValidCreateSaleDto.CustomerId, ValidCreateSaleDto.CustomerName, ValidCreateSaleDto.BranchId, ValidCreateSaleDto.BranchName,
                                     new List<SaleItem> { new SaleItem("product-1", "Product One", 2, 50, 5) }));
-
-        // Act
+        
         var result = await _saleService.CreateSaleAsync(ValidCreateSaleDto);
-
-        // Assert
+        
         result.ShouldNotBeNull();
         result.Success.ShouldBeTrue();
         result.Content.ShouldNotBeNull();
@@ -56,7 +53,6 @@ public class SaleServiceTests : BaseTest
     [Fact]
     public async Task CancelSaleAsync_Should_Cancel_Sale_Successfully()
     {
-        // Arrange
         var saleId = Guid.NewGuid();
         var sale = new Sale("customer-1", "Customer One", "branch-1", "Branch One",
             new List<SaleItem> { new SaleItem("product-1", "Product One", 2, 50, 0) });
@@ -66,11 +62,9 @@ public class SaleServiceTests : BaseTest
 
         _mockSaleRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Sale>()))
             .ReturnsAsync(sale);
-
-        // Act
+        
         var result = await _saleService.CancelSaleAsync(saleId);
-
-        // Assert
+        
         result.ShouldNotBeNull();
         result.Success.ShouldBeTrue();
         result.Content.ShouldNotBeNull();
@@ -81,16 +75,13 @@ public class SaleServiceTests : BaseTest
     [Fact]
     public async Task CancelSaleAsync_Should_Return_Error_If_Sale_Not_Found()
     {
-        // Arrange
         var saleId = Guid.NewGuid();
 
         _mockSaleRepository.Setup(repo => repo.GetByIdAsync(saleId))
             .ReturnsAsync((Sale)null);
-
-        // Act
+        
         var result = await _saleService.CancelSaleAsync(saleId);
-
-        // Assert
+        
         result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
         result.Errors.ShouldContain("No sale was found for the given Id.");
@@ -99,7 +90,6 @@ public class SaleServiceTests : BaseTest
     [Fact]
     public async Task CancelSaleAsync_Should_Return_Error_If_Sale_Already_Cancelled()
     {
-        // Arrange
         var saleId = Guid.NewGuid();
         var sale = new Sale("customer-1", "Customer One", "branch-1", "Branch One",
             new List<SaleItem> { new SaleItem("product-1", "Product One", 2, 50, 0) });
@@ -107,11 +97,9 @@ public class SaleServiceTests : BaseTest
         
         _mockSaleRepository.Setup(repo => repo.GetByIdAsync(saleId))
             .ReturnsAsync(sale);
-
-        // Act
+        
         var result = await _saleService.CancelSaleAsync(saleId);
-
-        // Assert
+        
         result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
         result.Errors.ShouldContain("Sale is already canceled.");
