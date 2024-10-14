@@ -4,19 +4,19 @@ public class ApiResponse<T>
 {
     public bool Success { get; set; }
     public List<string>? Errors { get; set; }
-    public T? Data { get; set; }
+    public T? Content { get; set; }
 
-    public ApiResponse(T data)
-    {
-        Success = true;
-        Errors = null;
-        Data = data;
-    }
-    
-    public ApiResponse(List<string> errors)
+    public ApiResponse(bool success, List<string> errors)
     {
         Success = false;
         Errors = errors;
-        Data = default;
+        Content = default;
+    }
+    
+    public ApiResponse(T content)
+    {
+        Success = true;
+        Errors = null;
+        Content = content;
     }
 }

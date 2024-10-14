@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.ComTypes;
 using UmDoisTresVendas.Domain.Entities.Enums;
 
 namespace UmDoisTresVendas.Domain.Entities;
@@ -8,35 +7,62 @@ public class Sale
     public Guid Id { get; private set; }
     public string SaleIdentification { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
     public List<SaleItem> Items { get; private set; }
     public string CustomerId { get; private set; }
+    public string CustomerName { get; private set; }
     public string BranchId { get; private set; }
+    public string BranchName { get; private set; }
     public SaleStatusEnum Status { get; private set; }
+    public decimal TotalPrice { get; private set; }
 
     public Sale() { }
     
-    public Sale(string customerId, string branchId, List<SaleItem> items)
+    public Sale(string customerId, string customerName, string branchId, string branchName, List<SaleItem> items)
     {
         Id = Guid.NewGuid();
         SaleIdentification = GenerateSaleIdentification(customerId, branchId, DateTime.Now);
         CreatedAt = DateTime.Now;
-        Items = items;
+        UpdatedAt = null;
+        Items = new List<SaleItem>();
         CustomerId = customerId;
+        CustomerName = customerName;
         BranchId = branchId;
+        BranchName = branchName;
         Status = SaleStatusEnum.Created;
+        
+        foreach (var item in items)
+        {
+            AddItem(item);
+        }
     }
-
+    
     public void AddItem(SaleItem item)
     {
         if (Status == SaleStatusEnum.Cancelled)
             throw new InvalidOperationException("Cannot add items to a canceled sale.");
 
         Items.Add(item);
+        UpdateTotalPrice();
     }
+    
+    public void RemoveItem(SaleItem item)
+    {
+        if (Status == SaleStatusEnum.Cancelled)
+            throw new InvalidOperationException("Cannot remove items from a canceled sale.");
 
+        Items.Remove(item);
+        UpdateTotalPrice();
+    }
+    
+    private void UpdateTotalPrice()
+    {
+        TotalPrice = Items.Sum(item => item.TotalPrice());
+    }
+    
     public decimal CalculateTotal()
     {
-        return Items.Sum(item => item.TotalPrice());
+        return TotalPrice;
     }
     
     private string GenerateSaleIdentification(string customerId, string branchId, DateTime date)

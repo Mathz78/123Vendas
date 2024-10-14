@@ -11,9 +11,17 @@ public class SaleDtoValidator : AbstractValidator<CreateSaleDto>
             .NotEmpty()
             .WithMessage($"The field {nameof(CreateSaleDto.CustomerId)} cannot be null or empty.");
 
+        RuleFor(x => x.CustomerName)
+            .NotEmpty()
+            .WithMessage($"The field {nameof(CreateSaleDto.CustomerName)} cannot be null or empty.");
+        
         RuleFor(x => x.BranchId)
             .NotEmpty()
             .WithMessage($"The field {nameof(CreateSaleDto.BranchId)} cannot be null or empty.");
+        
+        RuleFor(x => x.BranchName)
+            .NotEmpty()
+            .WithMessage($"The field {nameof(CreateSaleDto.BranchName)} cannot be null or empty.");
         
         RuleFor(x => x.Items)
             .NotNull().WithMessage("Items list cannot be null.")

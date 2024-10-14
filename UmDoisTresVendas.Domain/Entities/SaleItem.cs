@@ -4,14 +4,16 @@ public class SaleItem
 {
     public Guid Id { get; private set; }
     public string ProductId { get; private set; }
+    public string ProductName { get; private set; }
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
 
-    public SaleItem(string productId, int quantity, decimal unitPrice, decimal discount)
+    public SaleItem(string productId, string productName, int quantity, decimal unitPrice, decimal discount)
     {
         Id = Guid.NewGuid();
         ProductId = productId;
+        ProductName = productName;
         Quantity = quantity;
         UnitPrice = unitPrice;
         Discount = discount;

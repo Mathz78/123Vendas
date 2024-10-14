@@ -18,25 +18,27 @@ public class SaleService : ISaleService
         _saleDtoValidator = saleDtoValidator;
     }
 
-    public async Task<ApiResponse<string>> CreateSaleAsync(CreateSaleDto createSaleDto)
+    public async Task<ApiResponse<CreateSaleResponse>> CreateSaleAsync(CreateSaleDto createSaleDto)
     {
         var validationResult = await _saleDtoValidator.ValidateAsync(createSaleDto);
         if (!validationResult.IsValid)
         {
             var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-            return new ApiResponse<string>(errorMessages);
+            return new ApiResponse<CreateSaleResponse>(false, errorMessages);
         }
         
         var items = new List<SaleItem>();
         foreach (var item in createSaleDto.Items)
         {
-            items.Add(new SaleItem(item.ProductId, item.Quantity, item.UnitPrice, item.Discount));
+            items.Add(new SaleItem(item.ProductId, item.ProductName, item.Quantity, item.UnitPrice, item.Discount));
         }
-        
-        var sale = new Sale(createSaleDto.CustomerId, createSaleDto.BranchId, items);
+
+        var sale = new Sale(createSaleDto.CustomerId, createSaleDto.CustomerName, createSaleDto.BranchId, 
+            createSaleDto.BranchName, 
+            items);
         await _saleRepository.AddAsync(sale);
         
-        return new ApiResponse<string>(sale.SaleIdentification);
+        return new ApiResponse<CreateSaleResponse>(new CreateSaleResponse(sale.SaleIdentification));
     }
 
     public Task<Sale> GetSaleByIdAsync(string saleId)

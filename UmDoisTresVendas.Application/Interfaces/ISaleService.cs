@@ -6,6 +6,6 @@ namespace UmDoisTresVendas.Application.Interfaces;
 
 public interface ISaleService
 {
-    public Task<ApiResponse<string>> CreateSaleAsync(CreateSaleDto createSaleDto);
+    public Task<ApiResponse<CreateSaleResponse>> CreateSaleAsync(CreateSaleDto createSaleDto);
     public Task<Sale> GetSaleByIdAsync(string saleId);
 }
